@@ -1,0 +1,39 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Variables de entorno (nunca subir secretos reales)
+.env
+
+# Base de datos SQLite local
+*.db
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribución / empaquetado
+dist/
+build/
+*.egg-info/
+
+# Editores e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Gráficas generadas (el directorio sí se versiona, los archivos no)
+static/charts/*.png
