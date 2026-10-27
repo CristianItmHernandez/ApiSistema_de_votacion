@@ -33,8 +33,8 @@ API REST construida con **FastAPI** para gestionar un proceso electoral completo
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/<tu-usuario>/voting-system-api.git
-cd voting-system-api
+git clone https://github.com/CristianItmHernandez/ApiSistema_de_votacion.git
+cd ApiSistema_de_votacion
 
 # 2. Crear y activar el entorno virtual
 python -m venv .venv
@@ -243,7 +243,7 @@ curl http://127.0.0.1:8000/voters/ \
   -H "Authorization: Bearer eyJ..."
 ```
 
-> Para activar protección JWT en todos los endpoints: `AUTH_ENABLED=True` en `.env`.
+> Para activar protección JWT en los endpoints de votantes, candidatos y votos: configura `AUTH_ENABLED=True` en el `.env` de `voting-system-api/` y reinicia la aplicación. `/auth/token` permanece público para obtener el token y `/` para comprobar el estado del servicio.
 
 ---
 

@@ -2,15 +2,24 @@
 Router de votantes — capa de presentación (HTTP).
 Solo define rutas, status codes e inyección de dependencias.
 Toda la lógica de negocio delega a voter_service.
+
+La dependencia get_current_admin se aplica a nivel de router:
+- AUTH_ENABLED=False (default) → pasa sin token.
+- AUTH_ENABLED=True            → exige Bearer token válido en cada request.
 """
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
+from app.auth.security import get_current_admin
 from app.database import get_db
 from app.schemas.voter import VoterCreate, VoterResponse
 from app.services import voter_service
 
-router = APIRouter(prefix="/voters", tags=["Votantes"])
+router = APIRouter(
+    prefix="/voters",
+    tags=["Votantes"],
+    dependencies=[Depends(get_current_admin)],
+)
 
 
 @router.post(

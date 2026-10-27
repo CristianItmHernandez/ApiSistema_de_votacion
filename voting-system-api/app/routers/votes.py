@@ -6,12 +6,17 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
+from app.auth.security import get_current_admin
 from app.database import get_db
 from app.schemas.statistics import VotingStatistics
 from app.schemas.vote import VoteCreate, VoteResponse
 from app.services import stats_service, vote_service
 
-router = APIRouter(prefix="/votes", tags=["Votos"])
+router = APIRouter(
+    prefix="/votes",
+    tags=["Votos"],
+    dependencies=[Depends(get_current_admin)],
+)
 
 
 @router.post(

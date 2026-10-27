@@ -4,6 +4,9 @@ Suite de pruebas oficial — Fase 4.
 """
 from fastapi.testclient import TestClient
 
+from app.auth.security import auth_settings, oauth2_scheme
+from app.main import app
+
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -144,3 +147,45 @@ def test_statistics_and_chart_generation(client: TestClient):
     chart = client.get("/votes/statistics/chart")
     assert chart.status_code == 200
     assert chart.headers["content-type"] == "image/png"
+
+
+def test_auth_enabled_requires_bearer_token(client: TestClient, monkeypatch):
+    """Al activar JWT, los routers de votantes, candidatos y votos exigen token."""
+    monkeypatch.setattr(auth_settings, "AUTH_ENABLED", True)
+    protected_paths = ("/voters/", "/candidates/", "/votes/statistics")
+
+    for path in protected_paths:
+        response = client.get(path)
+        assert response.status_code == 401
+        assert response.headers["www-authenticate"] == "Bearer"
+
+    token_response = client.post(
+        "/auth/token",
+        data={
+            "username": auth_settings.ADMIN_USERNAME,
+            "password": auth_settings.ADMIN_PASSWORD,
+        },
+    )
+    assert token_response.status_code == 200, token_response.text
+    headers = {"Authorization": f"Bearer {token_response.json()['access_token']}"}
+
+    for path in protected_paths:
+        response = client.get(path, headers=headers)
+        assert response.status_code == 200, response.text
+
+
+def test_swagger_security_follows_auth_enabled(monkeypatch):
+    protected_paths = ("/voters/", "/candidates/", "/votes/statistics")
+
+    monkeypatch.setattr(auth_settings, "AUTH_ENABLED", False)
+    disabled_schema = app.openapi()
+    for path in protected_paths:
+        assert "security" not in disabled_schema["paths"][path]["get"]
+    assert "securitySchemes" not in disabled_schema.get("components", {})
+
+    monkeypatch.setattr(auth_settings, "AUTH_ENABLED", True)
+    enabled_schema = app.openapi()
+    for path in protected_paths:
+        assert enabled_schema["paths"][path]["get"]["security"]
+    assert oauth2_scheme.scheme_name in enabled_schema["components"]["securitySchemes"]
+    assert "security" not in enabled_schema["paths"]["/auth/token"]["post"]

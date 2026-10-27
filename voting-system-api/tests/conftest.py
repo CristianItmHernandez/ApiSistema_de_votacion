@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
+from app.auth.security import auth_settings
 from app.database import Base, get_db
 from app.main import app
 from app.models.candidate import Candidate
@@ -36,7 +37,13 @@ app.dependency_overrides[get_db] = override_get_db
 @pytest.fixture
 def client() -> TestClient:
     """Cliente HTTP con BD de test inyectada."""
-    return TestClient(app)
+    return TestClient(app, base_url="http://localhost")
+
+
+@pytest.fixture(autouse=True)
+def auth_disabled_by_default(monkeypatch):
+    """Mantiene las pruebas funcionales independientes del AUTH_ENABLED del entorno."""
+    monkeypatch.setattr(auth_settings, "AUTH_ENABLED", False)
 
 
 @pytest.fixture(autouse=True)
