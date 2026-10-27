@@ -6,7 +6,6 @@ from typing import Any
 
 import app.models  # Necesario para que SQLAlchemy registre todos los modelos
 from fastapi import FastAPI
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.openapi.utils import get_openapi
 
 from app.auth.security import auth_settings, oauth2_scheme
@@ -34,10 +33,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-app.add_middleware(
-    TrustedHostMiddleware,
-    allowed_hosts=["localhost", "127.0.0.1", "192.168.1.X"],
-)
 
 app.include_router(auth.router)
 app.include_router(voters.router)

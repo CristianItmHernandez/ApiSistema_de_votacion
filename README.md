@@ -89,6 +89,10 @@ DATABASE_URL=sqlite:///./voting_system.db
 | `http://127.0.0.1:8000/docs` | Swagger UI — prueba todos los endpoints con un clic |
 | `http://127.0.0.1:8000/redoc` | ReDoc — documentación de referencia navegable |
 
+Para entender cómo se conectan las capas de la aplicación y cómo se relacionan los endpoints, consulta el [diagrama de arquitectura y flujo de la API](voting-system-api/docs/arquitectura-y-flujo-api.md).
+
+La aplicación recibe las solicitudes directamente en FastAPI; no tiene configurado un middleware de validación del host.
+
 ---
 
 ## Demostración rápida (seed + gráfica)
