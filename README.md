@@ -33,8 +33,9 @@ API REST construida con **FastAPI** para gestionar un proceso electoral completo
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/CristianItmHernandez/ApiSistema_de_votacion.git
-cd ApiSistema_de_votacion
+git clone https://github.com/CristianItmHernandez/ApiSistema_de_votacion.git voting-system-api
+cd voting-system-api
+(O también click derecho en la carpeta 'voting-system-api' y click izquierdo en terminal, en caso de windows)
 
 # 2. Crear y activar el entorno virtual
 python -m venv .venv
